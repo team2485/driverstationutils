@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace RobotConnectionSwitcher {
     /// <summary>
@@ -25,11 +26,48 @@ namespace RobotConnectionSwitcher {
 
         public MainWindow() {
             InitializeComponent();
+
+            toggle.IsEnabled = false;
+            // get current mode
+            new Thread(new ThreadStart(delegate() {
+                try {
+                    Process p = new Process();
+                    p.EnableRaisingEvents = true;
+                    p.StartInfo.FileName = "netsh";
+                    p.StartInfo.Arguments = "int ip show address name = \"Wireless Network Connection\"";
+                    p.StartInfo.CreateNoWindow = true;
+                    p.StartInfo.UseShellExecute = false;
+                    p.StartInfo.RedirectStandardOutput = true;
+                    p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    p.Start();
+
+                    StringBuilder q = new StringBuilder();
+                    while (!p.HasExited) q.Append(p.StandardOutput.ReadToEnd());
+                    string val = q.ToString();
+
+                    Match res = Regex.Match(val, @"IP Address:\s*([0-9.]+)\r\n");
+                    if (res.Groups.Count >= 2 && res.Groups[1].Value == addr1) {
+                        // if we're on robot, show that
+                        Dispatcher.BeginInvoke(new Action(delegate() {
+                            toggle.IsChecked = true;
+                            toggle.IsEnabled = true;
+                        }));
+                    }
+                    else {
+                        Dispatcher.BeginInvoke(new Action(delegate() {
+                            toggle.IsEnabled = true;
+                        }));
+                    }
+
+                    p.Close();
+                }
+                catch (Exception) { }
+            })).Start();
         }
 
         private void toggle_Click(object sender, RoutedEventArgs e) {
             if (toggle.IsChecked.HasValue && toggle.IsChecked.Value) {
-                Thread turnOn = new Thread(new ThreadStart(delegate() {
+                new Thread(new ThreadStart(delegate() {
                     #region Turn On
                     try {
                         Dispatcher.BeginInvoke(new Action(delegate() {
@@ -73,12 +111,11 @@ namespace RobotConnectionSwitcher {
                         MessageBox.Show("Error switching to robot router:\r\n\r\n" + ex.ToString());
                     }
                     #endregion
-                }));
-                turnOn.Start();
+                })).Start();
             }
             else {
                 // turn off
-                Thread turnOff = new Thread(new ThreadStart(delegate() {
+                new Thread(new ThreadStart(delegate() {
                     #region Turn Off
                     try {
                         Dispatcher.BeginInvoke(new Action(delegate() {
@@ -118,8 +155,7 @@ namespace RobotConnectionSwitcher {
                         MessageBox.Show("Error switching to internet:\r\n\r\n" + ex.ToString());
                     }
                     #endregion
-                }));
-                turnOff.Start();
+                })).Start();
             }
         }
     }
