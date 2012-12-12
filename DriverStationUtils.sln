@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotConnectionSwitcher", "RobotConnectionSwitcher\RobotConnectionSwitcher.csproj", "{EE0A02DF-464E-4BA8-92C3-99ABF27F6221}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE0A02DF-464E-4BA8-92C3-99ABF27F6221}.Debug|x86.ActiveCfg = Debug|x86
+		{EE0A02DF-464E-4BA8-92C3-99ABF27F6221}.Debug|x86.Build.0 = Debug|x86
+		{EE0A02DF-464E-4BA8-92C3-99ABF27F6221}.Release|x86.ActiveCfg = Release|x86
+		{EE0A02DF-464E-4BA8-92C3-99ABF27F6221}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
