@@ -1,7 +1,7 @@
 ﻿<Window x:Class="RobotConnectionSwitcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Connection Switcher" SizeToContent="WidthAndHeight" ResizeMode="NoResize" Icon="/RobotConnectionSwitcher;component/router.ico" WindowStartupLocation="CenterScreen">
+        Title="Connection Switcher" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Icon="/RobotConnectionSwitcher;component/router.ico" WindowStartupLocation="CenterScreen" StateChanged="Window_StateChanged" Closed="Window_Closed">
     <Window.Resources>
         <BitmapImage x:Key="RobotImage" UriSource="pack://application:,,,/robot.png" />
         <BitmapImage x:Key="GlobeImage" UriSource="pack://application:,,,/globe.png" />
