@@ -47,10 +47,13 @@ namespace RobotConnectionSwitcher {
                     switchToInternet();
                 }));
 
-            notifyMenu.MenuItems.Add(new System.Windows.Forms.MenuItem(
-                "Show", new EventHandler(delegate(object sender, EventArgs e) {
+            System.Windows.Forms.MenuItem showMenuItem = new System.Windows.Forms.MenuItem(
+                "&Show", new EventHandler(delegate(object sender, EventArgs e) {
                     WindowState = WindowState.Normal;
-                })));
+                }));
+            showMenuItem.DefaultItem = true;
+
+            notifyMenu.MenuItems.Add(showMenuItem);
             notifyMenu.MenuItems.Add("-");
             notifyMenu.MenuItems.Add(robotMenuItem);
             notifyMenu.MenuItems.Add(internetMenuItem);
@@ -76,9 +79,19 @@ namespace RobotConnectionSwitcher {
                     while (!p.HasExited) q.Append(p.StandardOutput.ReadToEnd());
                     string val = q.ToString();
 
-                    Match res = Regex.Match(val, @"IP Address:\s*([0-9.]+)\r\n");
-                    if (res.Groups.Count >= 2 && res.Groups[1].Value == addr1) {
-                        // if we're on robot, show that
+                    if (val.Contains("The filename, directory name, or volume label syntax is incorrect.")) {
+                        // try again with LAC
+                        p.StartInfo.Arguments = "int ip show address name = \"Local Area Connection\"";
+                        p.Start();
+
+                        q.Clear();
+                        while (!p.HasExited) q.Append(p.StandardOutput.ReadToEnd());
+                        val = q.ToString();
+                    }
+
+                    Match res = Regex.Match(val, @"DHCP enabled:\s*(Yes|No)\r\n"); // check for auto IP addressing
+                    if (res.Groups.Count >= 2 && res.Groups[1].Value == "No") {
+                        // we're on robot, show that
                         Dispatcher.BeginInvoke(new Action(delegate() {
                             toggle.IsChecked = true;
                             toggle.IsEnabled = true;
