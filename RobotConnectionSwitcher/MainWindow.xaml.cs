@@ -223,10 +223,12 @@ namespace RobotConnectionSwitcher {
                 case System.Windows.WindowState.Minimized:
                     ShowInTaskbar = false;
                     notifyIcon.Visible = true;
+                    WindowStyle = System.Windows.WindowStyle.ToolWindow;
                     break;
                 default:
                     ShowInTaskbar = true;
                     notifyIcon.Visible = false;
+                    WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
                     break;
             }
         }
