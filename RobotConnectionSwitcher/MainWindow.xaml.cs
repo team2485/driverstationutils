@@ -20,7 +20,7 @@ namespace RobotConnectionSwitcher {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private const String addr1 = "10.24.85.30", addr2 = "10.24.85.31", mask = "255.0.0.0";
+        private const String WirelessAddress = "10.24.85.6", LANAddress = "10.24.85.5", Netmask = "255.0.0.0";
 
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.MenuItem robotMenuItem, internetMenuItem;
@@ -135,7 +135,7 @@ namespace RobotConnectionSwitcher {
                 p1.StartInfo.FileName = "netsh";
                 p1.StartInfo.Arguments = String.Format(
                      "int ip set address name = \"Wireless Network Connection\" source = static addr = {0} mask = {1}",
-                     addr1, mask);
+                     WirelessAddress, Netmask);
                 p1.StartInfo.CreateNoWindow = true;
                 p1.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 p1.Exited += new EventHandler(delegate(object sender1, EventArgs e1) {
@@ -144,7 +144,7 @@ namespace RobotConnectionSwitcher {
                     p2.StartInfo.FileName = "netsh";
                     p2.StartInfo.Arguments = String.Format(
                          "int ip set address name = \"Local Area Connection\" source = static addr = {0} mask = {1}",
-                         addr2, mask);
+                         LANAddress, Netmask);
                     p2.StartInfo.CreateNoWindow = true;
                     p2.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     p2.Exited += new EventHandler(delegate(object sender2, EventArgs e2) {
