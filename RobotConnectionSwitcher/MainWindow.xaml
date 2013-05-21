@@ -1,7 +1,7 @@
 ﻿<Window x:Class="RobotConnectionSwitcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Switcher" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Icon="/RobotConnectionSwitcher;component/router.ico" WindowStartupLocation="CenterScreen" StateChanged="Window_StateChanged" Closed="Window_Closed">
+        Title="Switcher" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" Topmost="True" StateChanged="Window_StateChanged" KeyDown="Window_KeyDown" Closing="Window_Closing" Closed="Window_Closed">
     <Window.Resources>
         <BitmapImage x:Key="RobotImage" UriSource="pack://application:,,,/robot.png" />
         <BitmapImage x:Key="GlobeImage" UriSource="pack://application:,,,/globe.png" />
@@ -108,8 +108,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid HorizontalAlignment="Stretch" Name="canvas1" VerticalAlignment="Stretch" Margin="10">
-        <CheckBox Name="toggle" Style="{DynamicResource OrangeSwitchStyle}" Width="168" Height="84" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0" Click="toggle_Click"></CheckBox>
-        <Label Name="label" HorizontalAlignment="Stretch" Margin="0,94,0,0" VerticalAlignment="Top" Content=" " HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10">
+        <CheckBox Name="toggle" Style="{DynamicResource OrangeSwitchStyle}" Width="168" Height="84" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0" IsTabStop="False" Click="toggle_Click"/>
     </Grid>
 </Window>

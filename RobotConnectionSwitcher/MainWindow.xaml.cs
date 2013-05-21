@@ -25,6 +25,7 @@ namespace RobotConnectionSwitcher {
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.MenuItem robotMenuItem, internetMenuItem;
         private System.Windows.Forms.ContextMenu notifyMenu;
+        private bool notifyQuitClicked = false;
 
         public MainWindow() {
             InitializeComponent();
@@ -53,7 +54,14 @@ namespace RobotConnectionSwitcher {
                 }));
             showMenuItem.DefaultItem = true;
 
+            System.Windows.Forms.MenuItem quitMenuItem = new System.Windows.Forms.MenuItem(
+                "&Quit", new EventHandler(delegate(object sender, EventArgs e) {
+                    notifyQuitClicked = true;
+                    Close();
+                }));
+
             notifyMenu.MenuItems.Add(showMenuItem);
+            notifyMenu.MenuItems.Add(quitMenuItem);
             notifyMenu.MenuItems.Add("-");
             notifyMenu.MenuItems.Add(robotMenuItem);
             notifyMenu.MenuItems.Add(internetMenuItem);
@@ -97,12 +105,20 @@ namespace RobotConnectionSwitcher {
                             toggle.IsEnabled = true;
                         }));
                         robotMenuItem.Checked = true;
+
+                        notifyIcon.Icon = new System.Drawing.Icon(
+                            System.Drawing.Icon.FromHandle(Properties.Resources.routerRobo.GetHicon()),
+                            Properties.Resources.routerRobo.Size);
                     }
                     else {
                         Dispatcher.BeginInvoke(new Action(delegate() {
                             toggle.IsEnabled = true;
                         }));
                         internetMenuItem.Checked = true;
+
+                        notifyIcon.Icon = new System.Drawing.Icon(
+                            System.Drawing.Icon.FromHandle(Properties.Resources.routerWeb.GetHicon()),
+                            Properties.Resources.routerWeb.Size);
                     }
 
                     p.Close();
@@ -123,7 +139,6 @@ namespace RobotConnectionSwitcher {
         private void switchToRobotRouter() {
             try {
                 Dispatcher.BeginInvoke(new Action(delegate() {
-                    label.Content = "Switching...";
                     toggle.IsChecked = true;
                     toggle.IsEnabled = false;
                     robotMenuItem.Checked = true;
@@ -150,11 +165,14 @@ namespace RobotConnectionSwitcher {
                     p2.Exited += new EventHandler(delegate(object sender2, EventArgs e2) {
                         // finish
                         Dispatcher.BeginInvoke(new Action(delegate() {
-                            label.Content = " ";
                             toggle.IsEnabled = true;
                         }));
 
                         notifyIcon.ShowBalloonTip(0, "", "Switched to Robot Router", System.Windows.Forms.ToolTipIcon.Info);
+
+                        notifyIcon.Icon = new System.Drawing.Icon(
+                            System.Drawing.Icon.FromHandle(Properties.Resources.routerRobo.GetHicon()),
+                            Properties.Resources.routerRobo.Size);
                     });
                     p2.Start();
                     p2.WaitForExit();
@@ -172,7 +190,6 @@ namespace RobotConnectionSwitcher {
         private void switchToInternet() {
             try {
                 Dispatcher.BeginInvoke(new Action(delegate() {
-                    label.Content = "Switching...";
                     toggle.IsChecked = false;
                     toggle.IsEnabled = false;
                     robotMenuItem.Checked = false;
@@ -195,11 +212,14 @@ namespace RobotConnectionSwitcher {
                     p2.Exited += new EventHandler(delegate(object sender2, EventArgs e2) {
                         // finish
                         Dispatcher.BeginInvoke(new Action(delegate() {
-                            label.Content = " ";
                             toggle.IsEnabled = true;
                         }));
 
                         notifyIcon.ShowBalloonTip(0, "", "Switched to Internet", System.Windows.Forms.ToolTipIcon.Info);
+
+                        notifyIcon.Icon = new System.Drawing.Icon(
+                            System.Drawing.Icon.FromHandle(Properties.Resources.routerWeb.GetHicon()),
+                            Properties.Resources.routerWeb.Size);
                     });
                     p2.Start();
                     p2.WaitForExit();
@@ -219,18 +239,31 @@ namespace RobotConnectionSwitcher {
         }
 
         private void Window_StateChanged(object sender, EventArgs e) {
-            switch (WindowState) {
-                case System.Windows.WindowState.Minimized:
-                    ShowInTaskbar = false;
-                    notifyIcon.Visible = true;
-                    WindowStyle = System.Windows.WindowStyle.ToolWindow;
+            bool minimized = WindowState == System.Windows.WindowState.Minimized;
+
+            ShowInTaskbar      = !minimized;
+            notifyIcon.Visible =  minimized;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e) {
+            switch (e.Key) {
+                case Key.Space:
+                    if (toggle.IsEnabled) {
+                        toggle.IsChecked = !toggle.IsChecked;
+                        toggle_Click(null, null);
+                    }
                     break;
-                default:
-                    ShowInTaskbar = true;
-                    notifyIcon.Visible = false;
-                    WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
+                case Key.Escape:
+                    Close();
                     break;
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            if (notifyQuitClicked) return;
+
+            e.Cancel = true;
+            WindowState = System.Windows.WindowState.Minimized;
         }
 
         private void Window_Closed(object sender, EventArgs e) {

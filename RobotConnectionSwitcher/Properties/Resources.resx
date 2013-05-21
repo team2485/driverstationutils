@@ -121,4 +121,10 @@
   <data name="routerIco" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\router_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="routerRobo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\router_robo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="routerWeb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\router_web.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
