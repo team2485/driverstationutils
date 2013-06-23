@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotConnectionSwitcher", "RobotConnectionSwitcher\RobotConnectionSwitcher.csproj", "{EE0A02DF-464E-4BA8-92C3-99ABF27F6221}"
 EndProject
 Global

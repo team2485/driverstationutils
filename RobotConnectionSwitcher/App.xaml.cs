@@ -13,7 +13,7 @@ namespace RobotConnectionSwitcher {
     public partial class App : Application {
         private Mutex mutex;
         public App() {
-            // allow only one instance of the app
+            // Allow only one instance of the app
             bool isOnlyInstance;
             mutex = new Mutex(true, "RobotConnectionSwitcherSingleInstance", out isOnlyInstance);
             if (!isOnlyInstance) {

@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Robot Connection Switcher")]
-[assembly: AssemblyDescription("Team 2485 Robot Connection Switcher")]
+[assembly: AssemblyDescription("Allows fast toggling between different connection modes on an FRC Driver Station.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Bryce Matsumori")]
+[assembly: AssemblyCompany("Team 2485, the W.A.R. (We Are Robot) Lords")]
 [assembly: AssemblyProduct("Robot Connection Switcher")]
-[assembly: AssemblyCopyright("Copyright © 2012 Team 2485")]
+[assembly: AssemblyCopyright("Copyright © 2013 Team 2485")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

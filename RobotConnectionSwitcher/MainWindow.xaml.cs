@@ -20,45 +20,58 @@ namespace RobotConnectionSwitcher {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private const String WirelessAddress = "10.24.85.6", LANAddress = "10.24.85.5", Netmask = "255.0.0.0";
+        private const String
+            WirelessAddress = "10.24.85.6",
+            LANAddress      = "10.24.85.5",
+            Netmask         = "255.255.255.0";
 
-        private System.Windows.Forms.NotifyIcon notifyIcon;
-        private System.Windows.Forms.MenuItem robotMenuItem, internetMenuItem;
+        private enum NetworkMode {
+            Robot, Internet
+        }
+
+        private System.Windows.Forms.NotifyIcon  notifyIcon;
+        private System.Windows.Forms.MenuItem    showMenuItem, quitMenuItem, robotMenuItem, internetMenuItem;
         private System.Windows.Forms.ContextMenu notifyMenu;
         private bool notifyQuitClicked = false;
 
+        /// <summary>
+        /// Constructs a new MainWindow and creates the taskbar icon.
+        /// The current network mode is determined and the toggle is changed to the correct mode.
+        /// </summary>
         public MainWindow() {
             InitializeComponent();
 
-            notifyIcon         = new System.Windows.Forms.NotifyIcon();
-            notifyIcon.Icon    = new System.Drawing.Icon(
-                System.Drawing.Icon.FromHandle(Properties.Resources.routerIco.GetHicon()),
-                Properties.Resources.routerIco.Size);
-            notifyIcon.Visible = false;
-            notifyIcon.Text    = "Connection Switcher";
+            // Setup taskbar icon
+            notifyIcon  = new System.Windows.Forms.NotifyIcon() {
+                Icon    = new System.Drawing.Icon(
+                        System.Drawing.Icon.FromHandle(Properties.Resources.IconDefault.GetHicon()),
+                        Properties.Resources.IconDefault.Size),
+                Visible = false,
+                Text    = "Connection Switcher"
+            };
             notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(notifyIcon_MouseDoubleClick);
 
+            // Setup taskbar menu and items
             notifyMenu = new System.Windows.Forms.ContextMenu();
+            showMenuItem = new System.Windows.Forms.MenuItem(
+                    "&Show", new EventHandler(delegate(object sender, EventArgs e) {
+                        WindowState = WindowState.Normal;
+                    })) {
+                DefaultItem = true
+            };
+            quitMenuItem = new System.Windows.Forms.MenuItem(
+                    "&Quit", new EventHandler(delegate(object sender, EventArgs e) {
+                        notifyQuitClicked = true;
+                        Close();
+                    }));
             robotMenuItem = new System.Windows.Forms.MenuItem(
-                "Switch to &Robot Router", new EventHandler(delegate(object sender, EventArgs e) {
-                    switchToRobotRouter();
-                }));
+                    "Switch to &Robot Router", new EventHandler(delegate(object sender, EventArgs e) {
+                        SwitchToRobot();
+                    }));
             internetMenuItem = new System.Windows.Forms.MenuItem(
-                "Switch to &Internet", new EventHandler(delegate(object sender, EventArgs e) {
-                    switchToInternet();
-                }));
-
-            System.Windows.Forms.MenuItem showMenuItem = new System.Windows.Forms.MenuItem(
-                "&Show", new EventHandler(delegate(object sender, EventArgs e) {
-                    WindowState = WindowState.Normal;
-                }));
-            showMenuItem.DefaultItem = true;
-
-            System.Windows.Forms.MenuItem quitMenuItem = new System.Windows.Forms.MenuItem(
-                "&Quit", new EventHandler(delegate(object sender, EventArgs e) {
-                    notifyQuitClicked = true;
-                    Close();
-                }));
+                    "Switch to &Internet", new EventHandler(delegate(object sender, EventArgs e) {
+                        SwitchToInternet();
+                    }));
 
             notifyMenu.MenuItems.Add(showMenuItem);
             notifyMenu.MenuItems.Add(quitMenuItem);
@@ -107,8 +120,8 @@ namespace RobotConnectionSwitcher {
                         robotMenuItem.Checked = true;
 
                         notifyIcon.Icon = new System.Drawing.Icon(
-                            System.Drawing.Icon.FromHandle(Properties.Resources.routerRobo.GetHicon()),
-                            Properties.Resources.routerRobo.Size);
+                            System.Drawing.Icon.FromHandle(Properties.Resources.IconRobo.GetHicon()),
+                            Properties.Resources.IconRobo.Size);
                     }
                     else {
                         Dispatcher.BeginInvoke(new Action(delegate() {
@@ -117,8 +130,8 @@ namespace RobotConnectionSwitcher {
                         internetMenuItem.Checked = true;
 
                         notifyIcon.Icon = new System.Drawing.Icon(
-                            System.Drawing.Icon.FromHandle(Properties.Resources.routerWeb.GetHicon()),
-                            Properties.Resources.routerWeb.Size);
+                            System.Drawing.Icon.FromHandle(Properties.Resources.IconWeb.GetHicon()),
+                            Properties.Resources.IconWeb.Size);
                     }
 
                     p.Close();
@@ -129,50 +142,88 @@ namespace RobotConnectionSwitcher {
             #endregion
         }
 
+        /// <summary>
+        /// Starts a thread to switch the network mode.
+        /// </summary>
         private void toggle_Click(object sender, RoutedEventArgs e) {
             if (toggle.IsChecked.HasValue && toggle.IsChecked.Value)
-                new Thread(new ThreadStart(switchToRobotRouter)).Start();
+                new Thread(new ThreadStart(SwitchToRobot)).Start();
             else
-                new Thread(new ThreadStart(switchToInternet)).Start();
+                new Thread(new ThreadStart(SwitchToInternet)).Start();
         }
 
-        private void switchToRobotRouter() {
+        /// <summary>
+        /// Switches the IP and DNS settings of the driver station to the robot configuration.
+        /// </summary>
+        private void SwitchToRobot() {
+            SwitchTo(NetworkMode.Robot);
+        }
+
+        /// <summary>
+        /// Switches the IP and DNS settings of the driver station to the normal internet configuration.
+        /// </summary>
+        private void SwitchToInternet() {
+            SwitchTo(NetworkMode.Internet);
+        }
+
+        /// <summary>
+        /// The internal function which actually does the configuration switching.
+        /// Used by SwitchToRobot() and SwitchToInternet().
+        /// </summary>
+        /// <param name="mode">The mode to switch to.</param>
+        private void SwitchTo(NetworkMode mode) {
+            bool robot = mode == NetworkMode.Robot;
             try {
                 Dispatcher.BeginInvoke(new Action(delegate() {
-                    toggle.IsChecked = true;
+                    toggle.IsChecked = robot;
                     toggle.IsEnabled = false;
-                    robotMenuItem.Checked = true;
-                    internetMenuItem.Checked = false;
+                    robotMenuItem.Checked = robot;
+                    internetMenuItem.Checked = !robot;
                 }));
 
-                Process p1 = new Process();
-                p1.EnableRaisingEvents = true;
-                p1.StartInfo.FileName = "netsh";
-                p1.StartInfo.Arguments = String.Format(
-                     "int ip set address name = \"Wireless Network Connection\" source = static addr = {0} mask = {1}",
-                     WirelessAddress, Netmask);
-                p1.StartInfo.CreateNoWindow = true;
-                p1.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                // Change the wireless configuration first
+                Process p1 = new Process {
+                    EnableRaisingEvents = true,
+                    StartInfo           = new ProcessStartInfo {
+                        FileName       = "netsh",
+                        Arguments      = robot ?
+                            String.Format(
+                                "int ip set address name = \"Wireless Network Connection\" source = static addr = {0} mask = {1}",
+                                WirelessAddress, Netmask) :
+                            "int ip set address name = \"Wireless Network Connection\" source = dhcp",
+                        CreateNoWindow = true,
+                        WindowStyle    = ProcessWindowStyle.Hidden
+                    }
+                };
                 p1.Exited += new EventHandler(delegate(object sender1, EventArgs e1) {
-                    Process p2 = new Process();
-                    p2.EnableRaisingEvents = true;
-                    p2.StartInfo.FileName = "netsh";
-                    p2.StartInfo.Arguments = String.Format(
-                         "int ip set address name = \"Local Area Connection\" source = static addr = {0} mask = {1}",
-                         LANAddress, Netmask);
-                    p2.StartInfo.CreateNoWindow = true;
-                    p2.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    // After the wireless configuration finishes, change the LAN configuration
+                    Process p2 = new Process {
+                        EnableRaisingEvents = true,
+                        StartInfo           = new ProcessStartInfo {
+                            FileName        = "netsh",
+                            Arguments       = robot ?
+                                String.Format(
+                                    "int ip set address name = \"Local Area Connection\" source = static addr = {0} mask = {1}",
+                                    LANAddress, Netmask) :
+                                "int ip set address name = \"Local Area Connection\" source = dhcp",
+                             CreateNoWindow = true,
+                             WindowStyle    = ProcessWindowStyle.Hidden
+                        }
+                    };
                     p2.Exited += new EventHandler(delegate(object sender2, EventArgs e2) {
-                        // finish
+                        // After both configurations finish, update the UI
                         Dispatcher.BeginInvoke(new Action(delegate() {
                             toggle.IsEnabled = true;
                         }));
 
-                        notifyIcon.ShowBalloonTip(0, "", "Switched to Robot Router", System.Windows.Forms.ToolTipIcon.Info);
+                        notifyIcon.ShowBalloonTip(0, "",
+                            String.Format("Switched to {0}", robot ? "Robot Router" : "Internet"),
+                            System.Windows.Forms.ToolTipIcon.Info);
 
+                        System.Drawing.Bitmap iconRes = robot ? Properties.Resources.IconRobo : Properties.Resources.IconWeb;
                         notifyIcon.Icon = new System.Drawing.Icon(
-                            System.Drawing.Icon.FromHandle(Properties.Resources.routerRobo.GetHicon()),
-                            Properties.Resources.routerRobo.Size);
+                            System.Drawing.Icon.FromHandle(iconRes.GetHicon()),
+                            iconRes.Size);
                     });
                     p2.Start();
                     p2.WaitForExit();
@@ -183,61 +234,24 @@ namespace RobotConnectionSwitcher {
                 p1.Close();
             }
             catch (Exception ex) {
-                MessageBox.Show("Error switching to robot router:\r\n\r\n" + ex.ToString());
+                MessageBox.Show(
+                    String.Format(
+                        "Error switching to {0}:\r\n\r\n{1}",
+                        robot ? "robot router" : "internet", ex
+                    ));
             }
         }
 
-        private void switchToInternet() {
-            try {
-                Dispatcher.BeginInvoke(new Action(delegate() {
-                    toggle.IsChecked = false;
-                    toggle.IsEnabled = false;
-                    robotMenuItem.Checked = false;
-                    internetMenuItem.Checked = true;
-                }));
-
-                Process p1 = new Process();
-                p1.EnableRaisingEvents = true;
-                p1.StartInfo.FileName = "netsh";
-                p1.StartInfo.Arguments = "int ip set address name = \"Wireless Network Connection\" source = dhcp";
-                p1.StartInfo.CreateNoWindow = true;
-                p1.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                p1.Exited += new EventHandler(delegate(object sender1, EventArgs e1) {
-                    Process p2 = new Process();
-                    p2.EnableRaisingEvents = true;
-                    p2.StartInfo.FileName = "netsh";
-                    p2.StartInfo.Arguments = "int ip set address name = \"Local Area Connection\" source = dhcp";
-                    p2.StartInfo.CreateNoWindow = true;
-                    p2.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    p2.Exited += new EventHandler(delegate(object sender2, EventArgs e2) {
-                        // finish
-                        Dispatcher.BeginInvoke(new Action(delegate() {
-                            toggle.IsEnabled = true;
-                        }));
-
-                        notifyIcon.ShowBalloonTip(0, "", "Switched to Internet", System.Windows.Forms.ToolTipIcon.Info);
-
-                        notifyIcon.Icon = new System.Drawing.Icon(
-                            System.Drawing.Icon.FromHandle(Properties.Resources.routerWeb.GetHicon()),
-                            Properties.Resources.routerWeb.Size);
-                    });
-                    p2.Start();
-                    p2.WaitForExit();
-                    p2.Close();
-                });
-                p1.Start();
-                p1.WaitForExit();
-                p1.Close();
-            }
-            catch (Exception ex) {
-                MessageBox.Show("Error switching to internet:\r\n\r\n" + ex.ToString());
-            }
-        }
-
+        /// <summary>
+        /// Shows the main window when the taskbar icon is clicked.
+        /// </summary>
         private void notifyIcon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e) {
             WindowState = WindowState.Normal;
         }
-
+        
+        /// <summary>
+        /// Toggles the main window and taskbar icon visibility based on the new state.
+        /// </summary>
         private void Window_StateChanged(object sender, EventArgs e) {
             bool minimized = WindowState == System.Windows.WindowState.Minimized;
 
@@ -245,6 +259,9 @@ namespace RobotConnectionSwitcher {
             notifyIcon.Visible =  minimized;
         }
 
+        /// <summary>
+        /// Enable keyboard shortcuts.
+        /// </summary>
         private void Window_KeyDown(object sender, KeyEventArgs e) {
             switch (e.Key) {
                 case Key.Space:
@@ -259,6 +276,10 @@ namespace RobotConnectionSwitcher {
             }
         }
 
+        /// <summary>
+        /// Instead of exiting the program, minimize the main window to the taskbar.
+        /// The exception is if the quit taskbar menu item was clicked.
+        /// </summary>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             if (notifyQuitClicked) return;
 

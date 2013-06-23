@@ -63,9 +63,9 @@ namespace RobotConnectionSwitcher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap routerIco {
+        internal static System.Drawing.Bitmap IconDefault {
             get {
-                object obj = ResourceManager.GetObject("routerIco", resourceCulture);
+                object obj = ResourceManager.GetObject("IconDefault", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace RobotConnectionSwitcher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap routerRobo {
+        internal static System.Drawing.Bitmap IconRobo {
             get {
-                object obj = ResourceManager.GetObject("routerRobo", resourceCulture);
+                object obj = ResourceManager.GetObject("IconRobo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace RobotConnectionSwitcher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap routerWeb {
+        internal static System.Drawing.Bitmap IconWeb {
             get {
-                object obj = ResourceManager.GetObject("routerWeb", resourceCulture);
+                object obj = ResourceManager.GetObject("IconWeb", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
