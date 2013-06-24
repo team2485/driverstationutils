@@ -20,9 +20,8 @@ namespace RobotConnectionSwitcher {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private const String
-            WirelessAddress = "10.24.85.6",
-            LANAddress      = "10.24.85.5",
+        private String
+            WirelessAddress, LANAddress,
             Netmask         = "255.255.255.0";
 
         private enum NetworkMode {
@@ -30,7 +29,7 @@ namespace RobotConnectionSwitcher {
         }
 
         private System.Windows.Forms.NotifyIcon  notifyIcon;
-        private System.Windows.Forms.MenuItem    showMenuItem, quitMenuItem, robotMenuItem, internetMenuItem;
+        private System.Windows.Forms.MenuItem    showMenuItem, settingsMenuItem, quitMenuItem, robotMenuItem, internetMenuItem;
         private System.Windows.Forms.ContextMenu notifyMenu;
         private bool notifyQuitClicked = false;
 
@@ -39,7 +38,26 @@ namespace RobotConnectionSwitcher {
         /// The current network mode is determined and the toggle is changed to the correct mode.
         /// </summary>
         public MainWindow() {
+            // Display settings on first run
+            if (Properties.Settings.Default.FirstRun) {
+                SettingsWindow settings = new SettingsWindow();
+                settings.ShowDialog();
+
+                Properties.Settings.Default.FirstRun = false;
+                Properties.Settings.Default.Save();
+            }
+
             InitializeComponent();
+
+            {
+                // Create addresses from team number settings
+                string prefix = SwitcherUtils.TeamNumberToNetworkPrefix(Properties.Settings.Default.TeamNumber);
+                WirelessAddress = prefix + ".6";
+                LANAddress = prefix + ".5";
+
+                // Set BitmapImage to saved image
+                Resources["RobotImage"] = SwitcherUtils.SavedRobotImageToBitmapSource();
+            }
 
             // Setup taskbar icon
             notifyIcon  = new System.Windows.Forms.NotifyIcon() {
@@ -59,6 +77,19 @@ namespace RobotConnectionSwitcher {
                     })) {
                 DefaultItem = true
             };
+            settingsMenuItem = new System.Windows.Forms.MenuItem(
+                    "Settings", new EventHandler(delegate(object sender, EventArgs e) {
+                        SettingsWindow settings = new SettingsWindow();
+                        settings.ShowDialog();
+
+                        // Recreate addresses from team number settings
+                        string prefix = SwitcherUtils.TeamNumberToNetworkPrefix(Properties.Settings.Default.TeamNumber);
+                        WirelessAddress = prefix + ".6";
+                        LANAddress = prefix + ".5";
+
+                        // Set BitmapImage to new saved image
+                        Resources["RobotImage"] = SwitcherUtils.SavedRobotImageToBitmapSource();
+                    }));
             quitMenuItem = new System.Windows.Forms.MenuItem(
                     "&Quit", new EventHandler(delegate(object sender, EventArgs e) {
                         notifyQuitClicked = true;
@@ -74,6 +105,7 @@ namespace RobotConnectionSwitcher {
                     }));
 
             notifyMenu.MenuItems.Add(showMenuItem);
+            notifyMenu.MenuItems.Add(settingsMenuItem);
             notifyMenu.MenuItems.Add(quitMenuItem);
             notifyMenu.MenuItems.Add("-");
             notifyMenu.MenuItems.Add(robotMenuItem);

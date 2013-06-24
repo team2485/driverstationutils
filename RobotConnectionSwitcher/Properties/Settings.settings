@@ -1,7 +1,15 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RobotConnectionSwitcher.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TeamNumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2485</Value>
+    </Setting>
+    <Setting Name="RobotImage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">iVBORw0KGgoAAAANSUhEUgAAAD0AAABACAYAAACp3n/2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAUmSURBVGhD5dtXiCRVFIDhNWAOq5hFUVkTgogoBsSEYsIIRkwYHtwHQURREEVBDJgwgBEFFcTIKmJY1AdzBlFRVNQ155zD+P89Xcud2jPTO9N1OowHPmb6VPV03emqWzfVjJGRkV46Gl/hEszGAVgF0b5pwmSiy2FciMNGfx25E9G+acJkovtQxU/tn08h2jdNmEx0B/7BK/gFxttYEtH+KcJkogfwcvv3lfEYLPSi7VxPhMlEFtiCV68vxeeYtt+0BfsMVxW5U/EnVi9y6cJkktVgAU8vcofC2BjlvqnCZJJNYRyMKrejCWInlPumCpNJdoWxA6qc37DhN17umypMJjkKxixUuVXxB7y2y31Thckk5+BXrFTklsIXuKzIpQuTSW7EPCxe5PQa7q7lUoXJJI/juVpOc/FMLZcqTCZ5HdE3ehPeR89aZWEywbL4BrbA6tvOhZ2PFYtcqjCZYE38jVOKXOV4/It1ilyqMJlgCxgHor5tTxhbor4tRZhMUBVsW9S3bQXDferbUoTJBCfCWA/1bZ7Wxgmob0sRJhOcj58xs8hVlscPOK/IpQqTCW7DB4huS4vgPXjrqm9LESYTPImJxsLcZiMl2ta4MNmw6pu8q8jV3Q4bL9G2xoXJBtmLuhnGeIVeGy/izSKXKkw2ZD98iCrugYOB62MtWIHtC88C4yVEf6dxYbJL1tDXoR4OFf0Ih36/g11Kc1UMbaF3xzuYSgxdoe1QOGXjQP5UY6gKvR2sebuNoSj0ErBbWF6X3cTAF9pe0/NoMpzf8p4efV6jwmQHdgGrGccm41N4S4s+s1FhsoMLkBHfwsGG6DMbFSY7eBZZ4XCSdUX0uY0JkxOw7/s9MsM57NRrO0xOYH/0Ik5D9PmNCJPj8L9vn7cX4ZTuGoiOo2thsrAu7Cg8jY/giGav4mREx9S1MFk4A/2KRxEdU9fCZNvSeAP9io+RMgEQJtt6VWmNF3ZB7XtHx9aVMNk2B/2OXRAdW1fCJDaHk+X9jnJRTmPCJC7GIIRrzJZBdIxTFiVdoGolMiixB6LjlONsR2CzItdRlHTJ0yDFrfC4HHs7CCfBnp7zYtvgIdjNXQz1soSqX1zl4+ofRyczOxRTCQcRn4CtNOM3OGS8Gzx2vyRnT/xpGY6DzdiLYJ1wC17FkZhfaAvazdhWv8Lh5U/wO6qWosNWV+BMHINr4a3PeTTz8wv9MKZLeDZ4VtwAJwQdmHAt6llwZdNeaBW66WGfQYzqTLDgsy30la2X/5+YZ6HtSXmxWxm49mO6hRWflfOX8BmSWa0Lu81GgLcBF8MMWg0+2XAlkzW4Y/KbYAN4fW+I8D6tah3IsEZ1b6+4StHppkN8XW4obQRvBcMc16Askx0onxIat9AuSLeqd5ZxEMPO0F+jv44b1k8P4nqcDWdQWo9SRAUuOU5l088RSqdW+x0uqHU01jUsCzMq69nqetRH4KIAr/GOhS6tgJ3hP8CasNuYzJ3C6/FwuGzaTsY+WJh4F44AjSnLmBeT4PTL3rgab2GytzqXWmyPe1uvRr/B+2Fb2VtMPeorDavHIDqFqxwW6JqOeTFFzkhsDZt6rhKKDroK58A8ECcAfa89J3tMy7VfO8zsLbM8kzw1y8+T/3RHZztF9N5GCl3nPdHVfz5i+DVs+jlebq/HRxm8TKL3laxIfQjVJrJnRLSPj0B0ilZbu26BRMM8eBsEGdM0/s1q5VIUPj4RvS+90NlcgXgsXoBP8nmHsbZuNUJiIzP+A+ej2S6RkTbqAAAAAElFTkSuQmCC</Value>
+    </Setting>
+    <Setting Name="FirstRun" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
