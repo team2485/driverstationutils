@@ -22,7 +22,7 @@ namespace RobotConnectionSwitcher {
     public partial class MainWindow : Window {
         private String
             WirelessAddress, LANAddress,
-            Netmask         = "255.255.255.0";
+            Netmask         = "255.0.0.0";
 
         private enum NetworkMode {
             Robot, Internet
@@ -52,7 +52,7 @@ namespace RobotConnectionSwitcher {
             {
                 // Create addresses from team number settings
                 string prefix = SwitcherUtils.TeamNumberToNetworkPrefix(Properties.Settings.Default.TeamNumber);
-                WirelessAddress = prefix + ".6";
+                WirelessAddress = prefix + ".9";
                 LANAddress = prefix + ".5";
 
                 // Set BitmapImage to saved image
