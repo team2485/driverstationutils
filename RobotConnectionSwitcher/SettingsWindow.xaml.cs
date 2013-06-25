@@ -19,7 +19,7 @@ namespace RobotConnectionSwitcher {
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
     public partial class SettingsWindow : Window {
-        private const string TeamNumberPreviewName = "cRIO IP";
+        private const string TeamNumberPreviewName = "DS wired IP";
 
         /// <summary>
         /// Constructs a new SettingsWindow and fills the interface with the current settings.
@@ -33,7 +33,7 @@ namespace RobotConnectionSwitcher {
             teamNumber.Text = Properties.Settings.Default.TeamNumber;
             teamNumber.TextChanged += teamNumber_TextChanged;
 
-            teamNumberPreview.Content = String.Format("ex. {0}: {1}.2",
+            teamNumberPreview.Content = String.Format("ex. {0} = {1}.5",
                 TeamNumberPreviewName, SwitcherUtils.TeamNumberToNetworkPrefix(Properties.Settings.Default.TeamNumber));
 
             robotImagePreview.Source = SwitcherUtils.SavedRobotImageToBitmapSource();
@@ -43,7 +43,7 @@ namespace RobotConnectionSwitcher {
             string networkPrefix = SwitcherUtils.TeamNumberToNetworkPrefix(teamNumber.Text);
             if (networkPrefix != null) {
                 // Update preview
-                teamNumberPreview.Content = String.Format("ex. {0}: {1}.2", TeamNumberPreviewName, networkPrefix);
+                teamNumberPreview.Content = String.Format("ex. {0} = {1}.5", TeamNumberPreviewName, networkPrefix);
 
                 // Save setting
                 Properties.Settings.Default.TeamNumber = teamNumber.Text;
@@ -51,7 +51,7 @@ namespace RobotConnectionSwitcher {
                 saveTipLabel.Visibility = Visibility.Visible;
             }
             else {
-                teamNumberPreview.Content = String.Format("ex. {0}: invalid", TeamNumberPreviewName);
+                teamNumberPreview.Content = String.Format("ex. {0} = invalid", TeamNumberPreviewName);
             }
         }
 

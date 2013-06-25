@@ -21,7 +21,7 @@ namespace RobotConnectionSwitcher {
     /// </summary>
     public partial class MainWindow : Window {
         private String
-            WirelessAddress, LANAddress,
+            WirelessAddress, WiredAddress,
             Netmask         = "255.0.0.0";
 
         private enum NetworkMode {
@@ -53,7 +53,7 @@ namespace RobotConnectionSwitcher {
                 // Create addresses from team number settings
                 string prefix = SwitcherUtils.TeamNumberToNetworkPrefix(Properties.Settings.Default.TeamNumber);
                 WirelessAddress = prefix + ".9";
-                LANAddress = prefix + ".5";
+                WiredAddress    = prefix + ".5";
 
                 // Set BitmapImage to saved image
                 Resources["RobotImage"] = SwitcherUtils.SavedRobotImageToBitmapSource();
@@ -85,7 +85,7 @@ namespace RobotConnectionSwitcher {
                         // Recreate addresses from team number settings
                         string prefix = SwitcherUtils.TeamNumberToNetworkPrefix(Properties.Settings.Default.TeamNumber);
                         WirelessAddress = prefix + ".6";
-                        LANAddress = prefix + ".5";
+                        WiredAddress    = prefix + ".5";
 
                         // Set BitmapImage to new saved image
                         Resources["RobotImage"] = SwitcherUtils.SavedRobotImageToBitmapSource();
@@ -236,7 +236,7 @@ namespace RobotConnectionSwitcher {
                             Arguments       = robot ?
                                 String.Format(
                                     "int ip set address name = \"Local Area Connection\" source = static addr = {0} mask = {1}",
-                                    LANAddress, Netmask) :
+                                    WiredAddress, Netmask) :
                                 "int ip set address name = \"Local Area Connection\" source = dhcp",
                              CreateNoWindow = true,
                              WindowStyle    = ProcessWindowStyle.Hidden
