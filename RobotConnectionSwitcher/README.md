@@ -44,9 +44,9 @@ When the window is closed by clicking the X or by pressing escape, a taskbar ico
 The notify icon reflects the current network mode. Double-click on the icon to show the main switcher window, or right-click to access the quick toggle menu.
 
 ## Installation
-The switcher requires the Microsoft .NET Framework 4 or later (download .NET 4.5 [here][.net4.5]).
+**Download the latest releases of the switcher from [GitHub releases][releases].**
 
-You can download the latest releases of the switcher here: [Download][download]
+The switcher requires the Microsoft .NET Framework 4 or later (download .NET 4.5 [here][.net4.5]).
 
 The application is self-contained, so you can unzip it anywhere.
 
@@ -57,4 +57,4 @@ It is also recommended that you set the icon behavior to "Show icon and notifica
 
 [.net4.5]: http://www.microsoft.com/en-us/download/details.aspx?id=30653
 [driver station setup]: http://wpilib.screenstepslive.com/s/3120/m/8559/l/92377-frc-driver-station-software
-[download]: https://github.com/team2485/driverstationutils/raw/master/bin/RobotConnectionSwitcher-latest.zip
+[releases]: https://github.com/team2485/driverstationutils/releases
